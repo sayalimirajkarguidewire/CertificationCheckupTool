@@ -1,0 +1,208 @@
+{
+  "rules": {
+    "BillingCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "BillingCenter Developer - Aspen New Features",
+        "Banff": "BillingCenter - Banff New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "InsuranceSuite Developer": {
+      "associateMap": {
+        "Aspen": "InsuranceSuite Developer - Aspen New Features",
+        "Banff": "InsuranceSuite Developer - Banff New Features",
+        "Cortina": "InsuranceSuite Developer - Cortina New Features",
+        "Dobson": "InsuranceSuite Developer - Dobson New Features",
+        "Elysian": "InsuranceSuite Developer - Elysian New Features",
+        "Flaine": "InsuranceSuite Developer - Flaine New Features",
+        "Garmisch": "InsuranceSuite Developer - Garmisch New Features"
+      },
+      "otherMap": {
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "Integration Developer": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "InsuranceSuite Integration - Aspen New Features",
+        "Banff": "InsuranceSuite Integration - Banff New Features",
+        "Cortina": "InsuranceSuite Integration - Cortina New Features",
+        "Dobson": "InsuranceSuite Integration - Dobson New Features",
+        "Elysian": "InsuranceSuite Integration - Elysian New Features",
+        "Flaine": "InsuranceSuite Integration - Flaine New Features",
+        "Garmisch": "InsuranceSuite Integration - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "PolicyCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "PolicyCenter Developer - Aspen New Features",
+        "Banff": "PolicyCenter Developer - Banff New Features",
+        "Cortina": "PolicyCenter Developer - Cortina New Features",
+        "Elysian": "PolicyCenter Developer - Elysian New Features",
+        "Flaine": "PolicyCenter Developer - Flaine New Features",
+        "Garmisch": "PolicyCenter Developer - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "ClaimCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Banff": "ClaimCenter - Banff New Features",
+        "Elysian": "ClaimCenter - Elysian New Features",
+        "Flaine": "ClaimCenter - Flaine New Features",
+        "Garmisch": "ClaimCenter - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "ClaimCenter Business Analyst": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Banff": "ClaimCenter - Banff New Features",
+        "Dobson": "ClaimCenter - Dobson New Features",
+        "Elysian": "ClaimCenter - Elysian New Features",
+        "Flaine": "ClaimCenter - Flaine New Features",
+        "Garmish": "ClaimCenter - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "InsuranceSuite Analyst": {
+      "associateMap": {
+        "Aspen": "InsuranceSuite Analyst - Aspen New Features",
+        "Banff": "InsuranceSuite Analyst - Banff New Features",
+        "Cortina": "InsuranceSuite Analyst - Cortina New Features",
+        "Dobson": "InsuranceSuite Analyst - Dobson New Features",
+        "Elysian": "InsuranceSuite Analyst - Elysian New Features",
+        "Flaine": "InsuranceSuite Analyst - Flaine New Features",
+        "Garmisch": "InsuranceSuite Analyst - Garmisch New Features"
+      },
+      "otherMap": {
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "InsuranceSuite Integration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "InsuranceSuite Integration - Aspen New Features",
+        "Banff": "InsuranceSuite Integration - Banff New Features",
+        "Cortina": "InsuranceSuite Integration - Cortina New Features",
+        "Dobson": "InsuranceSuite Integration - Dobson New Features",
+        "Elysian": "InsuranceSuite Integration - Elysian New Features",
+        "Flaine": "InsuranceSuite Integration - Flaine New Features",
+        "Garmisch": "InsuranceSuite Integration - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "PolicyCenter Business Analyst": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "PolicyCenter Business Analyst - Aspen New Features : Advanced Product Designer (APD)",
+        "Banff": "PolicyCenter - Banff New Features",
+        "Cortina": "PolicyCenter - Cortina New Features",
+        "Elysian": "PolicyCenter - Elysian New Features",
+        "Flaine": "PolicyCenter - Flaine New Features",
+        "Garmisch": "PolicyCenter - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+        "PolicyCenter - Banff New Features": [ "InsuranceSuite Analyst - Banff New Features" ]
+      }
+    },
+    "BillingCenter Business Analyst": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "BillingCenter Business Analyst - Aspen New Features",
+        "Banff": "BillingCenter - Banff New Features",
+        "Elysian": "BillingCenter - Elysian New Features"
+      },
+      "preRequisiteMap": {
+        "BillingCenter - Banff New Features": [ "InsuranceSuite Analyst - Banff New Features" ]
+      }
+    },
+    "Quality Analyst": {
+      "associateMap": {
+        "Banff": "InsuranceSuite Analyst - Banff New Features",
+        "Cortina": "InsuranceSuite Analyst - Cortina New Features",
+        "Dobson": "InsuranceSuite Analyst - Dobson New Features",
+        "Elysian": "InsuranceSuite Analyst - Elysian New Features",
+        "Flaine": "InsuranceSuite Analyst - Flaine New Features",
+        "Garmisch": "InsuranceSuite Analyst - Garmisch New Features"
+      },
+      "otherMap": {
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "InfoCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Cortina": "InfoCenter - Aspen New Features | InfoCenter - Banff New Features | InfoCenter - Cortina New Features",
+        "Dobson": "InfoCenter Configuration - Dobson New Features",
+        "Elysian": "InfoCenter Configuration - Elysian New Features",
+        "Flaine": "InfoCenter Configuration - Flaine New Features",
+        "Garmisch": "InfoCenter Configuration - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "DataHub and InfoCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Cortina": "DataHub - Aspen New Features | DataHub - Banff New Features | DataHub - Cortina New Features | InfoCenter - Aspen New Features | InfoCenter - Banff New Features | InfoCenter - Cortina New Features",
+        "Dobson": "DataHub and InfoCenter Integration - Dobson New Features",
+        "Elysian": "DataHub and InfoCenter Integration - Elysian New Features",
+        "Flaine": "DataHub and InfoCenter Integration - Flaine New Features",
+        "Garmisch": "DataHub and InfoCenter Integration - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "Digital Integration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "Digital - Aspen New Features",
+        "Banff": "Digital - Banff New Features",
+        "Cortina": "Digital - Cortina New Features",
+        "Dobson": "Digital - Dobson New Features | Digital Integration - Dobson New Features",
+        "Elysian": "Digital - Elysian New Features",
+        "Flaine": "Digital - Flaine New Features",
+        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    },
+    "Digital Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Cortina": "Digital - Cortina New Features | Digital Configuration - Cortina New Features",
+        "Dobson": "Digital - Dobson New Features | Digital Configuration - Dobson New Features",
+        "Elysian": "Digital - Elysian New Features",
+        "Flaine": "Digital - Flaine New Features",
+        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+      },
+      "preRequisiteMap": {
+      }
+    }
+  }
+}
