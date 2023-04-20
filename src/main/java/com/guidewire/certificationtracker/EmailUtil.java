@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class EmailUtil {
 
-  public static void sendEmail(String emailBody) {
+  public static void sendEmail(String emailBody, String userName) {
 
     final String username = "smirajkar@guidewire.com";
     final String password = "rlqltvzjzyqnmcjr";
@@ -37,11 +37,13 @@ public class EmailUtil {
       message.setSubject("Update your Guidewire Certifications");
 
       StringBuilder fullEmailBody = new StringBuilder();
-      fullEmailBody.append("Hello,\n\n");
+      fullEmailBody.append("Hello " + userName +",<br><br>");
+      fullEmailBody.append("This email is to provide you a summary of your current certifications along with some " +
+              "courses that you can consider taking to update your certifications.<br><br>");
       fullEmailBody.append(emailBody);
-      fullEmailBody.append("\nThanks,\n");
+      fullEmailBody.append("<br>Thanks,<br>");
       fullEmailBody.append("Guidewire Education");
-      message.setText(fullEmailBody.toString());
+      message.setContent(fullEmailBody.toString(), "text/html");
 
       Transport.send(message);
 

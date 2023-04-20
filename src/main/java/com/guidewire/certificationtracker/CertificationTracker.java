@@ -17,6 +17,7 @@ public class CertificationTracker {
   // person x track x level x releases
   private Map<String, Map<String, Map<String, List<String>>>> aggregatorMap;
   private TrackCertificationRules trackCertificationRules;
+  private Map<String, String> emailToNameMap;
   private static List<String> RELEASE_ORDER = Arrays.asList("Aspen", "Banff", "Cortina", "Dobson", "Elysian", "Flaine",
     "Garmisch");
 
@@ -26,6 +27,7 @@ public class CertificationTracker {
     InputStream inputStream = CertificationTrackerGUI.class.getResourceAsStream("/trackCertificationRules.json");
     String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
     this.trackCertificationRules = objectMapper.readValue(text, TrackCertificationRules.class);
+    this.emailToNameMap = new HashMap<>();
     CSVUtil.readCsvAsList(inputPath, true).stream()
       .forEach(row -> {
         try {
@@ -35,6 +37,7 @@ public class CertificationTracker {
           String level = courseNameParts[0].trim();
           String track = courseNameParts[1].trim();
           String release = courseNameParts[2].trim();
+          emailToNameMap.put(email, row[0]);
           if (!aggregatorMap.containsKey(email)) {
             aggregatorMap.put(email, new HashMap<>());
           }
@@ -60,6 +63,7 @@ public class CertificationTracker {
   // track x level x releases
   public String getRecommendations(String email) {
     StringBuilder outputBuilder = new StringBuilder();
+    outputBuilder.append("<html><body>");
     Map<String, Map<String, List<String>>> personMap = aggregatorMap.get(email);
     personMap.entrySet().forEach(personEntry -> {
       String track = personEntry.getKey();
@@ -84,31 +88,32 @@ public class CertificationTracker {
                 trackCertificationRules.rules.get(track).preRequisiteMap);
       }
     });
+    outputBuilder.append("</body></html>");
     return outputBuilder.toString();
   }
 
   private void outputCurrentCertifications(String track,
                                            Map<String, List<String>> intermediate, StringBuilder outputBuilder) {
-    outputBuilder.append("Current certifications for Track: " + track + "\n");
+    outputBuilder.append("<b>Current certifications for Track: " + track + "</b><br>");
     intermediate.entrySet().stream()
             .forEach(entry -> {
               if (entry.getKey().equals("Guidewire Certified Associate")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
                 outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
-                outputBuilder.append("\n");
+                outputBuilder.append("<br>");
               }
               if (entry.getKey().equals("Guidewire Certified Ace")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
                 outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
-                outputBuilder.append("\n");
+                outputBuilder.append("<br>");
               } else if (entry.getKey().equals("Guidewire Certified Specialist")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
                 outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
-                outputBuilder.append("\n");
+                outputBuilder.append("<br>");
               } else if (entry.getKey().equals("Guidewire Certified Professional")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
                 outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
-                outputBuilder.append("\n");
+                outputBuilder.append("<br>");
               }
             });
   }
@@ -118,14 +123,14 @@ public class CertificationTracker {
                                  Map<String, List<String>> preRequisiteMap) {
     List<String> releases = intermediate.get(level);
     List<String> pendingReleases = getPendingReleases(getMostRecentRelease(releases));
-    outputBuilder.append("\n");
+    outputBuilder.append("<br>");
     if (pendingReleases.size() == 0 ||
             pendingReleases.stream().noneMatch(release -> trackLevelMap.containsKey(release))) {
-      outputBuilder.append("Congratulations. Your certification is already up-to-date!");
-      outputBuilder.append("\n");
+      outputBuilder.append("Your certification is already up-to-date!");
+      outputBuilder.append("<br>");
     } else {
-      outputBuilder.append("Take the following courses to update your " + level + " certification: ");
-      outputBuilder.append("\n");
+      outputBuilder.append("<b>Take the following courses to update your " + level + " certification:</b>");
+      outputBuilder.append("<br>");
       outputBuilder.append(pendingReleases.stream()
               .filter(release -> trackLevelMap.containsKey(release))
               .flatMap(release -> {
@@ -142,10 +147,10 @@ public class CertificationTracker {
                 }
                 return Stream.of(course);
               })
-              .collect(Collectors.joining("\n")));
-      outputBuilder.append("\n");
+              .collect(Collectors.joining("<br>")));
+      outputBuilder.append("<br>");
     }
-    outputBuilder.append("\n\n");
+    outputBuilder.append("<br><br>");
   }
 
   private String getMostRecentRelease(List<String> inputReleases) {
@@ -161,5 +166,9 @@ public class CertificationTracker {
       return Arrays.asList();
     }
     return RELEASE_ORDER.subList(startIndex + 1, RELEASE_ORDER.size());
+  }
+
+  public String getNameFromEmail(String email) {
+    return emailToNameMap.get(email).split(" ")[0];
   }
 }

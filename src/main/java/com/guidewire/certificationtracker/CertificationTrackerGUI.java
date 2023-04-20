@@ -14,7 +14,7 @@ public class CertificationTrackerGUI extends JFrame {
   private JButton trackCertificationButton;
   private JButton sendEmailButton;
   private JLabel trackCertificationStatus;
-  private JTextArea certificationStatusTextArea;
+  private JEditorPane certificationStatusTextArea;
 
   private CertificationTracker certificationTracker;
 
@@ -59,6 +59,7 @@ public class CertificationTrackerGUI extends JFrame {
     centerPanel.setBackground(Color.WHITE);
     pane.add(centerPanel, BorderLayout.CENTER);
     addComponentsToCenterPane(centerPanel);
+    this.pack();
   }
   public void addComponentsToCenterPane(Container pane) {
     pane.setLayout(new GridBagLayout());
@@ -83,7 +84,9 @@ public class CertificationTrackerGUI extends JFrame {
 
     this.trackCertificationButton = new JButton("Track Certification");
     this.trackCertificationButton.setEnabled(true);
+    trackCertificationButton.setPreferredSize(new Dimension(150, 30));
     c.fill = GridBagConstraints.NONE;
+    c.anchor = GridBagConstraints.NORTH;
     c.weightx = 0.0;
     c.gridx = 0;
     c.gridy = 4;
@@ -97,7 +100,6 @@ public class CertificationTrackerGUI extends JFrame {
           String output = certificationTracker.getRecommendations(userNameTextField.getText());
           certificationStatusTextArea.setVisible(true);
           certificationStatusTextArea.setText(output);
-          this.pack();
         } catch (Exception ex) {
           trackCertificationStatus.setText("   Validation Failed");
           System.out.println("Exception encountered : " + ex.getStackTrace());
@@ -114,13 +116,16 @@ public class CertificationTrackerGUI extends JFrame {
     this.sendEmailButton = new JButton("Send Email");
     this.sendEmailButton.setEnabled(false);
     c.fill = GridBagConstraints.NONE;
+    c.anchor = GridBagConstraints.NORTH;
     c.weightx = 0.0;
-    c.gridx = 1;
-    c.gridy = 4;
+    c.gridx = 0;
+    c.gridy = 5;
+    sendEmailButton.setPreferredSize(new Dimension(150, 30));
     pane.add(sendEmailButton, c);
     sendEmailButton.addActionListener(e -> {
       Thread worker = new Thread(() -> {
-        EmailUtil.sendEmail(this.certificationStatusTextArea.getText());
+        EmailUtil.sendEmail(this.certificationStatusTextArea.getText(),
+                certificationTracker.getNameFromEmail(this.userNameTextField.getText().trim()));
         trackCertificationStatus.setText("Email Sent!");
         trackCertificationStatus.setForeground(Color.GREEN);
       });
@@ -132,20 +137,24 @@ public class CertificationTrackerGUI extends JFrame {
     c.weightx = 0.5;
     c.gridx = 2;
     c.gridy = 4;
-    pane.add(trackCertificationStatus, c);
+    // pane.add(trackCertificationStatus, c);
 
-    this.certificationStatusTextArea = new JTextArea(20, 50);
+    this.certificationStatusTextArea = new JEditorPane();
     JScrollPane scroll = new JScrollPane (this.certificationStatusTextArea,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     this.certificationStatusTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    this.certificationStatusTextArea.setContentType("text/html");
     this.certificationStatusTextArea.setEditable(false);
+    this.certificationStatusTextArea.setPreferredSize(new Dimension(700, 300));
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 0.0;
     c.weighty = 4;
     c.gridx = 1;
-    c.gridy = 5;
+    c.gridy = 4;
+    c.gridheight = 3;
     this.certificationStatusTextArea.setVisible(false);
     pane.add(scroll, c);
+    this.pack();
   }
 
   /**
