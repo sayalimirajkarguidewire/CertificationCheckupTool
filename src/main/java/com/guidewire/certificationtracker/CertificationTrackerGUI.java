@@ -97,7 +97,7 @@ public class CertificationTrackerGUI extends JFrame {
       trackCertificationStatus.setEnabled(false);
       Thread worker = new Thread(() -> {
         try {
-          String output = certificationTracker.getRecommendations(userNameTextField.getText());
+          String output = certificationTracker.getRecommendations(userNameTextField.getText().trim());
           certificationStatusTextArea.setVisible(true);
           certificationStatusTextArea.setText(output);
         } catch (Exception ex) {
@@ -135,9 +135,9 @@ public class CertificationTrackerGUI extends JFrame {
     this.trackCertificationStatus = new JLabel("");
     c.fill = GridBagConstraints.WEST;
     c.weightx = 0.5;
-    c.gridx = 2;
-    c.gridy = 4;
-    // pane.add(trackCertificationStatus, c);
+    c.gridx = 0;
+    c.gridy = 2;
+    //pane.add(trackCertificationStatus, c);
 
     this.certificationStatusTextArea = new JEditorPane();
     JScrollPane scroll = new JScrollPane (this.certificationStatusTextArea,

@@ -7,4 +7,5 @@ public class TrackCertificationRule {
     public Map<String, String> associateMap;
     public Map<String, String> otherMap;
     public Map<String, List<String>> preRequisiteMap;
+    public String linkedAssociateTrack;
 }

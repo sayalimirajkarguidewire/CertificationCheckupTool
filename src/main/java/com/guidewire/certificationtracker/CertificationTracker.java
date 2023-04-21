@@ -5,11 +5,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,26 +61,38 @@ public class CertificationTracker {
     StringBuilder outputBuilder = new StringBuilder();
     outputBuilder.append("<html><body>");
     Map<String, Map<String, List<String>>> personMap = aggregatorMap.get(email);
-    personMap.entrySet().forEach(personEntry -> {
+    personMap.entrySet()
+            .stream()
+            .sorted(Comparator.comparingInt(c -> c.getKey().equals("InsuranceSuite Developer")
+                    || c.getKey().equals("InsuranceSuite Analyst") ? 0 : 1))
+            .forEach(personEntry -> {
       String track = personEntry.getKey();
       Map<String, List<String>> intermediate = personEntry.getValue();
       outputCurrentCertifications(track, intermediate, outputBuilder);
+      String linkedAssociateTrack = trackCertificationRules.rules.get(track).linkedAssociateTrack;
+      Map<String, String> linkedAssociateTrackLevelMap = linkedAssociateTrack != null
+              ? trackCertificationRules.rules.get(linkedAssociateTrack).associateMap
+              : Collections.emptyMap();
       if (intermediate.containsKey("Guidewire Certified Associate")) {
         recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", track,
                 trackCertificationRules.rules.get(track).associateMap,
+                linkedAssociateTrackLevelMap,
                 trackCertificationRules.rules.get(track).preRequisiteMap);
       }
       if (intermediate.containsKey("Guidewire Certified Ace")) {
         recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", track,
                 trackCertificationRules.rules.get(track).otherMap,
+                linkedAssociateTrackLevelMap,
                 trackCertificationRules.rules.get(track).preRequisiteMap);
       } else if (intermediate.containsKey("Guidewire Certified Specialist")) {
         recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", track,
                 trackCertificationRules.rules.get(track).otherMap,
+                linkedAssociateTrackLevelMap,
                 trackCertificationRules.rules.get(track).preRequisiteMap);
       } else if (intermediate.containsKey("Guidewire Certified Professional")) {
         recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", track,
                 trackCertificationRules.rules.get(track).otherMap,
+                linkedAssociateTrackLevelMap,
                 trackCertificationRules.rules.get(track).preRequisiteMap);
       }
     });
@@ -120,37 +128,44 @@ public class CertificationTracker {
 
   private void recommendInternal(Map<String, List<String>> intermediate, StringBuilder outputBuilder,
                                  String level, String track, Map<String, String> trackLevelMap,
+                                 Map<String, String> linkedAssociateTrackLevelMap,
                                  Map<String, List<String>> preRequisiteMap) {
     List<String> releases = intermediate.get(level);
     List<String> pendingReleases = getPendingReleases(getMostRecentRelease(releases));
-    outputBuilder.append("<br>");
     if (pendingReleases.size() == 0 ||
             pendingReleases.stream().noneMatch(release -> trackLevelMap.containsKey(release))) {
-      outputBuilder.append("Your certification is already up-to-date!");
-      outputBuilder.append("<br>");
+      outputBuilder.append("<b><i style=\"color:green;\">Your certification is already up-to-date!</i></b>");
     } else {
-      outputBuilder.append("<b>Take the following courses to update your " + level + " certification:</b>");
+      outputBuilder.append("<b><i style=\"color:blue;\">Take the following courses to update your " + level + " certification:</i></b>");
       outputBuilder.append("<br>");
-      outputBuilder.append(pendingReleases.stream()
-              .filter(release -> trackLevelMap.containsKey(release))
-              .flatMap(release -> {
-                String parts[] = trackLevelMap.get(release).split(" : ");
-                String course = parts[0];
-                if (preRequisiteMap.containsKey(course)) {
-                  List<String> output = new ArrayList<>();
-                  output.addAll(preRequisiteMap.get(course));
-                  output.add(course);
-                  if (parts.length > 1) {
-                    output.add("Recommended : " + parts[1]);
-                  }
-                  return output.stream();
-                }
-                return Stream.of(course);
-              })
+
+      outputBuilder.append(Stream.of(getUpdateMessage(pendingReleases, linkedAssociateTrackLevelMap, Collections.emptyMap()),
+              getUpdateMessage(pendingReleases, trackLevelMap, preRequisiteMap))
+              .filter(x -> !x.trim().isEmpty())
               .collect(Collectors.joining("<br>")));
-      outputBuilder.append("<br>");
     }
     outputBuilder.append("<br><br>");
+  }
+
+  private String getUpdateMessage(List<String> pendingReleases, Map<String, String> trackLevelMap,
+                        Map<String, List<String>> preRequisiteMap) {
+    return pendingReleases.stream()
+            .filter(release -> trackLevelMap.containsKey(release))
+            .flatMap(release -> {
+              String parts[] = trackLevelMap.get(release).split(" : ");
+              String course = parts[0];
+              if (preRequisiteMap.containsKey(course)) {
+                List<String> output = new ArrayList<>();
+                output.addAll(preRequisiteMap.get(course));
+                output.add(course);
+                if (parts.length > 1) {
+                  output.add("Recommended : " + parts[1]);
+                }
+                return output.stream();
+              }
+              return Stream.of(course);
+            })
+            .collect(Collectors.joining("<br>"));
   }
 
   private String getMostRecentRelease(List<String> inputReleases) {
