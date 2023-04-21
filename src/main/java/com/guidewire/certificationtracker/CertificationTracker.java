@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 public class CertificationTracker {
   // person x track x level x releases
   private Map<String, Map<String, Map<String, List<String>>>> aggregatorMap;
+  private Map<String, Set<String>> releaseToUniqueUsers;
+  private Map<String, List<String>> releaseToNonUniqueUsers;
   private TrackCertificationRules trackCertificationRules;
   private Map<String, String> emailToNameMap;
   private static List<String> RELEASE_ORDER = Arrays.asList("Aspen", "Banff", "Cortina", "Dobson", "Elysian", "Flaine",
@@ -24,6 +26,8 @@ public class CertificationTracker {
     String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
     this.trackCertificationRules = objectMapper.readValue(text, TrackCertificationRules.class);
     this.emailToNameMap = new HashMap<>();
+    this.releaseToUniqueUsers = new HashMap<>();
+    this.releaseToNonUniqueUsers = new HashMap<>();
     CSVUtil.readCsvAsList(inputPath, true).stream()
       .forEach(row -> {
         try {
@@ -33,6 +37,18 @@ public class CertificationTracker {
           String level = courseNameParts[0].trim();
           String track = courseNameParts[1].trim();
           String release = courseNameParts[2].trim();
+          if (releaseToUniqueUsers.containsKey(release)) {
+            releaseToUniqueUsers.get(release).add(email);
+          } else {
+            releaseToUniqueUsers.put(release, new HashSet<>());
+            releaseToUniqueUsers.get(release).add(email);
+          }
+          if (releaseToNonUniqueUsers.containsKey(release)) {
+            releaseToNonUniqueUsers.get(release).add(email);
+          } else {
+            releaseToNonUniqueUsers.put(release, new ArrayList<>());
+            releaseToNonUniqueUsers.get(release).add(email);
+          }
           emailToNameMap.put(email, row[0]);
           if (!aggregatorMap.containsKey(email)) {
             aggregatorMap.put(email, new HashMap<>());
@@ -53,7 +69,25 @@ public class CertificationTracker {
 
   public static void main(String[] args) throws Exception {
     CertificationTracker certificationTracker = new CertificationTracker("/Users/smirajkar/Downloads/test_data.csv");
-    System.out.print(certificationTracker.getRecommendations("kalyan.chakravarthy@markel.com"));
+    //System.out.print(certificationTracker.getRecommendations("kalyan.chakravarthy@markel.com"));
+    certificationTracker.getNumUniqueUsersByRelease();
+    certificationTracker.getNumNonUniqueUsersByRelease();
+  }
+
+  public void getNumUniqueUsersByRelease() {
+    releaseToUniqueUsers.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(x -> x.getKey()))
+            .forEach(entry ->
+                    System.out.println(entry.getKey() + " " + entry.getValue().size()));
+  }
+
+  public void getNumNonUniqueUsersByRelease() {
+    releaseToNonUniqueUsers.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(x -> x.getKey()))
+            .forEach(entry ->
+                    System.out.println(entry.getKey() + " " + entry.getValue().size()));
   }
 
   // track x level x releases
