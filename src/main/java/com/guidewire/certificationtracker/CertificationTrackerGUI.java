@@ -128,6 +128,9 @@ public class CertificationTrackerGUI extends JFrame {
                 certificationTracker.getNameFromEmail(this.userNameTextField.getText().trim()));
         trackCertificationStatus.setText("Email Sent!");
         trackCertificationStatus.setForeground(Color.GREEN);
+        JOptionPane.showMessageDialog(this,
+                "Email sent to " + certificationTracker.getFullNameFromEmail(userNameTextField.getText().trim())
+                        + " (" + userNameTextField.getText().trim() + ")" + "!");
       });
       worker.start();
     });

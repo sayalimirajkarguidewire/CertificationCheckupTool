@@ -186,4 +186,8 @@ public class CertificationTracker {
   public String getNameFromEmail(String email) {
     return emailToNameMap.get(email).split(" ")[0];
   }
+
+  public String getFullNameFromEmail(String email) {
+    return emailToNameMap.get(email);
+  }
 }
