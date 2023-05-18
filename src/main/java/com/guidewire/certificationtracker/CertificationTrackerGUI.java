@@ -13,6 +13,7 @@ public class CertificationTrackerGUI extends JFrame {
   private JTextField userNameTextField;
   private JButton trackCertificationButton;
   private JButton sendEmailButton;
+  private JButton trackAllUsersButton;
   private JLabel trackCertificationStatus;
   private JEditorPane certificationStatusTextArea;
 
@@ -122,6 +123,17 @@ public class CertificationTrackerGUI extends JFrame {
     c.gridy = 5;
     sendEmailButton.setPreferredSize(new Dimension(150, 30));
     pane.add(sendEmailButton, c);
+
+    this.trackAllUsersButton = new JButton("Analyze All Data");
+    this.trackAllUsersButton.setEnabled(true);
+    c.fill = GridBagConstraints.NONE;
+    c.anchor = GridBagConstraints.NORTH;
+    c.weightx = 0.0;
+    c.gridx = 0;
+    c.gridy = 6;
+    trackAllUsersButton.setPreferredSize(new Dimension(150, 30));
+    pane.add(trackAllUsersButton, c);
+
     sendEmailButton.addActionListener(e -> {
       Thread worker = new Thread(() -> {
         EmailUtil.sendEmail(this.certificationStatusTextArea.getText(),
@@ -131,6 +143,24 @@ public class CertificationTrackerGUI extends JFrame {
         JOptionPane.showMessageDialog(this,
                 "Email sent to " + certificationTracker.getFullNameFromEmail(userNameTextField.getText().trim())
                         + " (" + userNameTextField.getText().trim() + ")" + "!");
+      });
+      worker.start();
+    });
+
+    trackAllUsersButton.addActionListener(e -> {
+      Thread worker = new Thread(() -> {
+        try {
+          this.trackAllUsersButton.setEnabled(false);
+          certificationTracker.analyzeDataForAllUsers();
+        } catch (Exception ex) {
+          System.out.println("Failed to analyze data for all users" + ex.getStackTrace());
+        } finally {
+          this.trackAllUsersButton.setEnabled(true);
+        }
+        trackCertificationStatus.setText("Analysis Complete!");
+        trackCertificationStatus.setForeground(Color.GREEN);
+        JOptionPane.showMessageDialog(this,
+                "Analysis Complete! Data in /Users/smirajkar/Downloads/output.csv");
       });
       worker.start();
     });

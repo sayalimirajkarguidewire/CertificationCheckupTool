@@ -5,6 +5,8 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,9 +36,9 @@ public class CertificationTracker {
           String email = row[1];
           String courseName = row[5];
           String[] courseNameParts = courseName.split("-�|-");
-          String level = courseNameParts[0].trim();
-          String track = courseNameParts[1].trim();
-          String release = courseNameParts[2].trim();
+          String level = getAlphaNumericString(courseNameParts[0].trim());
+          String track = getAlphaNumericString(courseNameParts[1].trim());
+          String release = getAlphaNumericString(courseNameParts[2].trim());
           if (releaseToUniqueUsers.containsKey(release)) {
             releaseToUniqueUsers.get(release).add(email);
           } else {
@@ -67,8 +69,36 @@ public class CertificationTracker {
       });
   }
 
+  private String getAlphaNumericString(String input) {
+    int startIndex = 0;
+    for (int i = 0; i < input.length(); i++) {
+      if (Character.isAlphabetic(input.charAt(i))) {
+        startIndex = i;
+        break;
+      }
+    }
+    return input.substring(startIndex);
+  }
+
+  public void analyzeDataForAllUsers() throws Exception {
+    List<String> outputLines = this.emailToNameMap.entrySet()
+            .stream()
+            .map(entry -> {
+              try {
+                String recommendations = this.getRecommendations(entry.getKey());
+                return entry.getKey() + "," + recommendations;
+              } catch (Exception e) {
+                System.out.println("Exception occurred : " + e.getStackTrace());
+              }
+              return "";
+            })
+            .collect(Collectors.toList());
+    Files.write(Paths.get("/Users/smirajkar/Downloads/output.csv"), outputLines);
+  }
+
   public static void main(String[] args) throws Exception {
     CertificationTracker certificationTracker = new CertificationTracker("/Users/smirajkar/Downloads/test_data.csv");
+
     //System.out.print(certificationTracker.getRecommendations("kalyan.chakravarthy@markel.com"));
     certificationTracker.getNumUniqueUsersByRelease();
     certificationTracker.getNumNonUniqueUsersByRelease();
