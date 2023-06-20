@@ -133,31 +133,43 @@ public class CertificationTracker {
       String track = personEntry.getKey();
       Map<String, List<String>> intermediate = personEntry.getValue();
       outputCurrentCertifications(track, intermediate, outputBuilder);
-      String linkedAssociateTrack = trackCertificationRules.rules.get(track).linkedAssociateTrack;
-      Map<String, String> linkedAssociateTrackLevelMap = linkedAssociateTrack != null
-              ? trackCertificationRules.rules.get(linkedAssociateTrack).associateMap
-              : Collections.emptyMap();
-      if (intermediate.containsKey("Guidewire Certified Associate")) {
-        recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", track,
-                trackCertificationRules.rules.get(track).associateMap,
-                linkedAssociateTrackLevelMap,
-                trackCertificationRules.rules.get(track).preRequisiteMap);
-      }
-      if (intermediate.containsKey("Guidewire Certified Ace")) {
-        recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", track,
-                trackCertificationRules.rules.get(track).otherMap,
-                linkedAssociateTrackLevelMap,
-                trackCertificationRules.rules.get(track).preRequisiteMap);
-      } else if (intermediate.containsKey("Guidewire Certified Specialist")) {
-        recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", track,
-                trackCertificationRules.rules.get(track).otherMap,
-                linkedAssociateTrackLevelMap,
-                trackCertificationRules.rules.get(track).preRequisiteMap);
-      } else if (intermediate.containsKey("Guidewire Certified Professional")) {
-        recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", track,
-                trackCertificationRules.rules.get(track).otherMap,
-                linkedAssociateTrackLevelMap,
-                trackCertificationRules.rules.get(track).preRequisiteMap);
+      if (!trackCertificationRules.rules.containsKey(track)) {
+        outputBuilder.append("Unknown Track : " + track + "<br>");
+      } else {
+        String linkedAssociateTrack = trackCertificationRules.rules.get(track).linkedAssociateTrack;
+        Map<String, String> linkedAssociateTrackLevelMap = linkedAssociateTrack != null
+                ? trackCertificationRules.rules.get(linkedAssociateTrack).associateMap
+                : Collections.emptyMap();
+        boolean isValidLevel = false;
+        if (intermediate.containsKey("Guidewire Certified Associate")) {
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", track,
+                  trackCertificationRules.rules.get(track).associateMap,
+                  linkedAssociateTrackLevelMap,
+                  trackCertificationRules.rules.get(track).preRequisiteMap);
+          isValidLevel = true;
+        }
+        if (intermediate.containsKey("Guidewire Certified Ace")) {
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", track,
+                  trackCertificationRules.rules.get(track).otherMap,
+                  linkedAssociateTrackLevelMap,
+                  trackCertificationRules.rules.get(track).preRequisiteMap);
+          isValidLevel = true;
+        } else if (intermediate.containsKey("Guidewire Certified Specialist")) {
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", track,
+                  trackCertificationRules.rules.get(track).otherMap,
+                  linkedAssociateTrackLevelMap,
+                  trackCertificationRules.rules.get(track).preRequisiteMap);
+          isValidLevel = true;
+        } else if (intermediate.containsKey("Guidewire Certified Professional")) {
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", track,
+                  trackCertificationRules.rules.get(track).otherMap,
+                  linkedAssociateTrackLevelMap,
+                  trackCertificationRules.rules.get(track).preRequisiteMap);
+          isValidLevel = true;
+        }
+        if (!isValidLevel) {
+          outputBuilder.append("Unknown Level : " + Arrays.toString(intermediate.keySet().toArray()) + "<br>");
+        }
       }
     });
     outputBuilder.append("</body></html>");
@@ -195,7 +207,12 @@ public class CertificationTracker {
                                  Map<String, String> linkedAssociateTrackLevelMap,
                                  Map<String, List<String>> preRequisiteMap) {
     List<String> releases = intermediate.get(level);
-    List<String> pendingReleases = getPendingReleases(getMostRecentRelease(releases));
+    String mostRecentRelease = getMostRecentRelease(releases);
+    if (!isValidRelease(mostRecentRelease)) {
+      outputBuilder.append("Unknown Release : " + mostRecentRelease + "<br>");
+      return;
+    }
+    List<String> pendingReleases = getPendingReleases(mostRecentRelease);
     if (pendingReleases.size() == 0 ||
             pendingReleases.stream().noneMatch(release -> trackLevelMap.containsKey(release))) {
       outputBuilder.append("<b><i style=\"color:green;\">Your certification is already up-to-date!</i></b>");
@@ -237,6 +254,10 @@ public class CertificationTracker {
       .sorted()
       .collect(Collectors.toList());
     return sortedReleases.get(sortedReleases.size() - 1);
+  }
+
+  private boolean isValidRelease(String inputRelease) {
+    return RELEASE_ORDER.contains(inputRelease);
   }
 
   private List<String> getPendingReleases(String inputRelease) {
