@@ -19,8 +19,10 @@ public class CertificationTracker {
   private Map<String, List<String>> releaseToNonUniqueUsers;
   private TrackCertificationRules trackCertificationRules;
   private Map<String, String> emailToNameMap;
+  private Map<String, String> emailToManagerMap;
+  private Map<String, String> emailToOrganizationMap;
   private static List<String> RELEASE_ORDER = Arrays.asList("Aspen", "Banff", "Cortina", "Dobson", "Elysian", "Flaine",
-    "Garmisch");
+    "Garmisch", "Hakuba");
 
   public CertificationTracker(String inputPath) throws Exception {
     this.aggregatorMap = new HashMap<>();
@@ -29,6 +31,8 @@ public class CertificationTracker {
     String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
     this.trackCertificationRules = objectMapper.readValue(text, TrackCertificationRules.class);
     this.emailToNameMap = new HashMap<>();
+    this.emailToManagerMap = new HashMap<>();
+    this.emailToOrganizationMap = new HashMap<>();
     this.releaseToUniqueUsers = new HashMap<>();
     this.releaseToNonUniqueUsers = new HashMap<>();
     CSVUtil.readCsvAsList(inputPath, true).stream()
@@ -53,6 +57,8 @@ public class CertificationTracker {
             releaseToNonUniqueUsers.get(release).add(email);
           }
           emailToNameMap.put(email, row[0]);
+          emailToOrganizationMap.put(email, row[2]);
+          emailToManagerMap.put(email, row[27]);
           if (!aggregatorMap.containsKey(email)) {
             aggregatorMap.put(email, new HashMap<>());
           }
@@ -87,7 +93,8 @@ public class CertificationTracker {
             .map(entry -> {
               try {
                 String recommendations = this.getRecommendations(entry.getKey());
-                return entry.getKey() + "," + "\"" + recommendations + "\"";
+                return entry.getKey() + ",\"" + emailToOrganizationMap.get(entry.getKey()) + "\",\""
+                        + emailToManagerMap.get(entry.getKey()) + "\"," + recommendations;
               } catch (Exception e) {
                 System.out.println("Exception occurred : " + e.getStackTrace());
               }

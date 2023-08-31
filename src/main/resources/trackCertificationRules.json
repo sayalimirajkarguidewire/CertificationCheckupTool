@@ -5,7 +5,8 @@
       },
       "otherMap": {
         "Aspen": "BillingCenter Developer - Aspen New Features",
-        "Banff": "BillingCenter - Banff New Features"
+        "Banff": "BillingCenter - Banff New Features",
+        "Hakuba": "BillingCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -19,7 +20,8 @@
         "Dobson": "InsuranceSuite Developer - Dobson New Features",
         "Elysian": "InsuranceSuite Developer - Elysian New Features",
         "Flaine": "InsuranceSuite Developer - Flaine New Features",
-        "Garmisch": "InsuranceSuite Developer - Garmisch New Features"
+        "Garmisch": "InsuranceSuite Developer - Garmisch New Features",
+        "Hakuba": "InsuranceSuite Developer - Hakuba New Features"
       },
       "otherMap": {
       },
@@ -36,7 +38,8 @@
         "Dobson": "InsuranceSuite Integration - Dobson New Features",
         "Elysian": "InsuranceSuite Integration - Elysian New Features",
         "Flaine": "InsuranceSuite Integration - Flaine New Features",
-        "Garmisch": "InsuranceSuite Integration - Garmisch New Features"
+        "Garmisch": "InsuranceSuite Integration - Garmisch New Features",
+        "Hakuba": "InsuranceSuite Integration - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -46,12 +49,13 @@
       "associateMap": {
       },
       "otherMap": {
-        "Aspen": "PolicyCenter Developer - Aspen New Features",
-        "Banff": "PolicyCenter Developer - Banff New Features",
-        "Cortina": "PolicyCenter Developer - Cortina New Features",
-        "Elysian": "PolicyCenter Developer - Elysian New Features",
-        "Flaine": "PolicyCenter Developer - Flaine New Features",
-        "Garmisch": "PolicyCenter Developer - Garmisch New Features"
+        "Aspen": "PolicyCenter - Aspen New Features",
+        "Banff": "PolicyCenter - Banff New Features",
+        "Cortina": "PolicyCenter - Cortina New Features",
+        "Elysian": "PolicyCenter - Elysian New Features",
+        "Flaine": "PolicyCenter - Flaine New Features",
+        "Garmisch": "PolicyCenter - Garmisch New Features",
+        "Hakuba": "PolicyCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -64,7 +68,8 @@
         "Banff": "ClaimCenter - Banff New Features",
         "Elysian": "ClaimCenter Developer - Elysian New Features",
         "Flaine": "ClaimCenter - Flaine New Features",
-        "Garmisch": "ClaimCenter - Garmisch New Features"
+        "Garmisch": "ClaimCenter - Garmisch New Features",
+        "Hakuba": "ClaimCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
