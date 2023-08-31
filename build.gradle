@@ -37,13 +37,13 @@ jar {
 
 shadowJar {
     manifest {
-        attributes 'Main-Class': 'com.qavalidator.QAValidatorGUI'
+        attributes 'Main-Class': 'com.guidewire.certificationtracker.CertificationTrackerGUI'
     }
-    archiveBaseName.set('QAValidator')
+    archiveBaseName.set('CertificationTracker')
     archiveClassifier.set('')
     archiveVersion.set('')
 }
 
 application {
-    mainClassName = 'com.guidewire.qavalidator.QAValidatorGUI'
+    mainClassName = 'com.guidewire.certificationtracker.CertificationTrackerGUI'
 }

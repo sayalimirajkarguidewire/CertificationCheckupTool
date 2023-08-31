@@ -2,14 +2,26 @@ package com.guidewire.certificationtracker;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class CertificationTrackerGUI extends JFrame {
   private JLabel validatorLogoLabel;
+
+  private JLabel inputPathLabel;
   private JLabel userNameLabel;
+
+  private JFilePicker inputPathPicker;
   private JTextField userNameTextField;
   private JButton trackCertificationButton;
   private JButton sendEmailButton;
@@ -21,7 +33,6 @@ public class CertificationTrackerGUI extends JFrame {
 
   public CertificationTrackerGUI(String title) throws Exception {
     super(title);
-    this.certificationTracker = new CertificationTracker("C:\\Users\\smirajkar\\Downloads\\test_data.csv");
     addComponentsToPane(this.getContentPane());
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -67,11 +78,26 @@ public class CertificationTrackerGUI extends JFrame {
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.HORIZONTAL;
 
-    this.userNameLabel = new JLabel("   User Email");
+    this.inputPathLabel = new JLabel("       Input File Path");
     c.weightx = 0.5;
     c.fill = GridBagConstraints.HORIZONTAL;
     c.gridx = 0;
     c.gridy = 1;
+    pane.add(inputPathLabel, c);
+    this.inputPathPicker = new JFilePicker("", "Browse");
+    this.inputPathPicker.setMode(JFilePicker.MODE_OPEN);
+    this.inputPathPicker.addFileTypeFilter("csv", "Comma Separated Document");
+    c.weightx = 0.5;
+    c.gridx = 1;
+    c.gridy = 1;
+    c.weighty = 2;
+    pane.add(inputPathPicker, c);
+
+    this.userNameLabel = new JLabel("       User Email");
+    c.weightx = 0.5;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.gridx = 0;
+    c.gridy = 2;
     pane.add(userNameLabel, c);
     this.userNameTextField = new JTextField(35);
     this.userNameTextField.setEditable(true);
@@ -79,18 +105,21 @@ public class CertificationTrackerGUI extends JFrame {
     c.weightx = 0.5;
     c.fill = GridBagConstraints.HORIZONTAL;
     c.gridx = 1;
-    c.gridy = 1;
+    c.gridy = 2;
     c.weighty = 2;
     pane.add(userNameTextField, c);
 
     this.trackCertificationButton = new JButton("Track Certification");
+    this.trackCertificationButton.setToolTipText("Clicking on this button will analyze certification details only for "
+      + "the "
+      + "specified email address. Output will be displayed in the text area.");
     this.trackCertificationButton.setEnabled(true);
     trackCertificationButton.setPreferredSize(new Dimension(150, 30));
     c.fill = GridBagConstraints.NONE;
     c.anchor = GridBagConstraints.NORTH;
     c.weightx = 0.0;
     c.gridx = 0;
-    c.gridy = 4;
+    c.gridy = 5;
     pane.add(trackCertificationButton, c);
     trackCertificationButton.addActionListener(e -> {
       trackCertificationStatus.setForeground(Color.BLACK);
@@ -98,17 +127,21 @@ public class CertificationTrackerGUI extends JFrame {
       trackCertificationStatus.setEnabled(false);
       Thread worker = new Thread(() -> {
         try {
+          if (inputPathPicker.getSelectedFilePath().isEmpty()
+            || !Files.exists(Paths.get(inputPathPicker.getSelectedFilePath()))) {
+            JOptionPane.showMessageDialog(this,
+              "Please specify valid input CSV file!");
+            return;
+          }
+          this.certificationTracker = new CertificationTracker(inputPathPicker.getSelectedFilePath());
           String output = certificationTracker.getRecommendations(userNameTextField.getText().trim());
           certificationStatusTextArea.setVisible(true);
           certificationStatusTextArea.setText(output);
         } catch (Exception ex) {
-          trackCertificationStatus.setText("   Validation Failed");
-          System.out.println("Exception encountered : " + ex.getStackTrace());
-          trackCertificationStatus.setForeground(Color.RED);
+          JOptionPane.showMessageDialog(this,
+            "Validation Failed :" + ex.getStackTrace());
         }
-        trackCertificationStatus.setText("Complete!");
-        trackCertificationStatus.setForeground(Color.GREEN);
-        sendEmailButton.setEnabled(true);
+        //sendEmailButton.setEnabled(true);
         SwingUtilities.invokeLater(() -> trackCertificationButton.setEnabled(true));
       });
       worker.start();
@@ -120,17 +153,20 @@ public class CertificationTrackerGUI extends JFrame {
     c.anchor = GridBagConstraints.NORTH;
     c.weightx = 0.0;
     c.gridx = 0;
-    c.gridy = 5;
+    c.gridy = 6;
     sendEmailButton.setPreferredSize(new Dimension(150, 30));
     pane.add(sendEmailButton, c);
 
     this.trackAllUsersButton = new JButton("Analyze All Data");
     this.trackAllUsersButton.setEnabled(true);
+    this.trackAllUsersButton.setToolTipText("Clicking on this button will analyze all the users' data from the "
+      + "specified input file. The output will be written to a new CSV file at the same location as the input file, "
+      + "with the file name being <input-file-name>_analyzed.csv");
     c.fill = GridBagConstraints.NONE;
     c.anchor = GridBagConstraints.NORTH;
     c.weightx = 0.0;
     c.gridx = 0;
-    c.gridy = 6;
+    c.gridy = 7;
     trackAllUsersButton.setPreferredSize(new Dimension(150, 30));
     pane.add(trackAllUsersButton, c);
 
@@ -149,9 +185,17 @@ public class CertificationTrackerGUI extends JFrame {
 
     trackAllUsersButton.addActionListener(e -> {
       Thread worker = new Thread(() -> {
+        String outputFilePath = getOutputPathFromInputPath(inputPathPicker.getSelectedFilePath());
         try {
+          if (inputPathPicker.getSelectedFilePath().isEmpty()
+            || !Files.exists(Paths.get(inputPathPicker.getSelectedFilePath()))) {
+            JOptionPane.showMessageDialog(this,
+              "Please specify valid input CSV file!");
+            return;
+          }
+          this.certificationTracker = new CertificationTracker(inputPathPicker.getSelectedFilePath());
           this.trackAllUsersButton.setEnabled(false);
-          certificationTracker.analyzeDataForAllUsers();
+          certificationTracker.analyzeDataForAllUsers(outputFilePath);
         } catch (Exception ex) {
           System.out.println("Failed to analyze data for all users" + ex.getStackTrace());
         } finally {
@@ -160,7 +204,7 @@ public class CertificationTrackerGUI extends JFrame {
         trackCertificationStatus.setText("Analysis Complete!");
         trackCertificationStatus.setForeground(Color.GREEN);
         JOptionPane.showMessageDialog(this,
-                "Analysis Complete! Data in /Users/smirajkar/Downloads/output.csv");
+                "Analysis Complete! Data in " + outputFilePath);
       });
       worker.start();
     });
@@ -169,7 +213,7 @@ public class CertificationTrackerGUI extends JFrame {
     c.fill = GridBagConstraints.WEST;
     c.weightx = 0.5;
     c.gridx = 0;
-    c.gridy = 2;
+    c.gridy = 3;
     //pane.add(trackCertificationStatus, c);
 
     this.certificationStatusTextArea = new JEditorPane();
@@ -183,7 +227,7 @@ public class CertificationTrackerGUI extends JFrame {
     c.weightx = 0.0;
     c.weighty = 4;
     c.gridx = 1;
-    c.gridy = 4;
+    c.gridy = 5;
     c.gridheight = 3;
     this.certificationStatusTextArea.setVisible(false);
     pane.add(scroll, c);
@@ -199,7 +243,23 @@ public class CertificationTrackerGUI extends JFrame {
     //Create and set up the window.
     try {
       CertificationTrackerGUI validatorGUI = new CertificationTrackerGUI("Certification Tracker Tool");
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      System.err.println("Failed to create GUI : " + e.getStackTrace());
+    }
+  }
+
+  private String getOutputPathFromInputPath(String inputPathString) {
+    if (inputPathString.isEmpty()) {
+      return "";
+    }
+    Path inputPath = Paths.get(inputPathString);
+    String fileName = inputPath.getFileName().toString();
+    Date date = new Date() ;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+    String outputFileName = fileName.split("\\.")[0] + "_analyzed_" + dateFormat.format(date) + ".csv";
+
+    String outputDirectory = inputPath.getParent().toAbsolutePath().toString();
+    return outputDirectory + File.separator + outputFileName;
   }
 
   public static void main(String[] args) throws Exception {

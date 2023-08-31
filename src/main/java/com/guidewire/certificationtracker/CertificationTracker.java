@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,20 +81,20 @@ public class CertificationTracker {
     return input.substring(startIndex);
   }
 
-  public void analyzeDataForAllUsers() throws Exception {
+  public void analyzeDataForAllUsers(String outputFilePath) throws Exception {
     List<String> outputLines = this.emailToNameMap.entrySet()
             .stream()
             .map(entry -> {
               try {
                 String recommendations = this.getRecommendations(entry.getKey());
-                return entry.getKey() + "," + recommendations;
+                return entry.getKey() + "," + "\"" + recommendations + "\"";
               } catch (Exception e) {
                 System.out.println("Exception occurred : " + e.getStackTrace());
               }
               return "";
             })
             .collect(Collectors.toList());
-    Files.write(Paths.get("/Users/smirajkar/Downloads/output.csv"), outputLines);
+    Files.write(Paths.get(outputFilePath), outputLines);
   }
 
   public static void main(String[] args) throws Exception {
@@ -124,7 +125,11 @@ public class CertificationTracker {
   public String getRecommendations(String email) {
     StringBuilder outputBuilder = new StringBuilder();
     outputBuilder.append("<html><body>");
+    if (!aggregatorMap.containsKey(email)) {
+      return "No user found with ID : <b color=\"red\">" + email + "</b></body></html>";
+    }
     Map<String, Map<String, List<String>>> personMap = aggregatorMap.get(email);
+    AtomicBoolean hasValidLevel = new AtomicBoolean(false);
     personMap.entrySet()
             .stream()
             .sorted(Comparator.comparingInt(c -> c.getKey().equals("InsuranceSuite Developer")
@@ -170,8 +175,13 @@ public class CertificationTracker {
         if (!isValidLevel) {
           outputBuilder.append("Unknown Level : " + Arrays.toString(intermediate.keySet().toArray()) + "<br>");
         }
+        hasValidLevel.set(isValidLevel);
       }
     });
+    if (hasValidLevel.get()) {
+      outputBuilder.append("<br><br>To access courses for updating certifications log into Guidewire Education "
+        + "account and go to My Learning → My Learning Paths → New Features Subscription<br><br>");
+    }
     outputBuilder.append("</body></html>");
     return outputBuilder.toString();
   }

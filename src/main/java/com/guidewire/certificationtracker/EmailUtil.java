@@ -32,7 +32,7 @@ public class EmailUtil {
       message.setFrom(new InternetAddress("smirajkar@guidewire.com"));
       message.setRecipients(
         Message.RecipientType.TO,
-        InternetAddress.parse("smirajkar@guidewire.com")
+        InternetAddress.parse("smirajkar@guidewire.com,earnold@guidewire.com")
       );
       message.setSubject("Update your Guidewire Certifications");
 
