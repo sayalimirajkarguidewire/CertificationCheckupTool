@@ -12,6 +12,18 @@
       },
       "linkedAssociateTrack": "InsuranceSuite Developer"
     },
+    "Migration Developer": {
+      "associateMap": {},
+      "otherMap": {},
+      "preRequisiteMap": {},
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
+    "Quality Automation Developer": {
+      "associateMap": {},
+      "otherMap": {},
+      "preRequisiteMap": {},
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
     "InsuranceSuite Developer": {
       "associateMap": {
         "Aspen": "InsuranceSuite Developer - Aspen New Features",
@@ -83,7 +95,8 @@
         "Dobson": "ClaimCenter - Dobson New Features",
         "Elysian": "ClaimCenter - Elysian New Features",
         "Flaine": "ClaimCenter - Flaine New Features",
-        "Garmish": "ClaimCenter - Garmisch New Features"
+        "Garmish": "ClaimCenter - Garmisch New Features",
+        "Hakuba": "ClaimCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -129,7 +142,8 @@
         "Cortina": "PolicyCenter - Cortina New Features",
         "Elysian": "PolicyCenter - Elysian New Features",
         "Flaine": "PolicyCenter - Flaine New Features",
-        "Garmisch": "PolicyCenter - Garmisch New Features"
+        "Garmisch": "PolicyCenter - Garmisch New Features",
+        "Hakuba": "PolicyCenter - Haukba New Features"
       },
       "preRequisiteMap": {
         "PolicyCenter - Banff New Features": [ "InsuranceSuite Analyst - Banff New Features" ]
@@ -142,7 +156,8 @@
       "otherMap": {
         "Aspen": "BillingCenter Business Analyst - Aspen New Features",
         "Banff": "BillingCenter - Banff New Features",
-        "Elysian": "BillingCenter - Elysian New Features"
+        "Elysian": "BillingCenter - Elysian New Features",
+        "Hakuba": "BillingCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
         "BillingCenter - Banff New Features": [ "InsuranceSuite Analyst - Banff New Features" ]
@@ -151,17 +166,12 @@
     },
     "Quality Analyst": {
       "associateMap": {
-        "Banff": "InsuranceSuite Analyst - Banff New Features",
-        "Cortina": "InsuranceSuite Analyst - Cortina New Features",
-        "Dobson": "InsuranceSuite Analyst - Dobson New Features",
-        "Elysian": "InsuranceSuite Analyst - Elysian New Features",
-        "Flaine": "InsuranceSuite Analyst - Flaine New Features",
-        "Garmisch": "InsuranceSuite Analyst - Garmisch New Features"
       },
       "otherMap": {
       },
       "preRequisiteMap": {
-      }
+      },
+      "linkedAssociateTrack": "InsuranceSuite Analyst"
     },
     "InfoCenter Configuration": {
       "associateMap": {
@@ -171,7 +181,8 @@
         "Dobson": "InfoCenter Configuration - Dobson New Features",
         "Elysian": "InfoCenter Configuration - Elysian New Features",
         "Flaine": "InfoCenter Configuration - Flaine New Features",
-        "Garmisch": "InfoCenter Configuration - Garmisch New Features"
+        "Garmisch": "InfoCenter Configuration - Garmisch New Features",
+        "Hakuba": "InfoCenter Configuration - Hakuba New Features"
       },
       "preRequisiteMap": {
       }
@@ -184,7 +195,8 @@
         "Dobson": "DataHub and InfoCenter Integration - Dobson New Features",
         "Elysian": "DataHub and InfoCenter Integration - Elysian New Features",
         "Flaine": "DataHub and InfoCenter Integration - Flaine New Features",
-        "Garmisch": "DataHub and InfoCenter Integration - Garmisch New Features"
+        "Garmisch": "DataHub and InfoCenter Integration - Garmisch New Features",
+        "Hakuba": "DataHub and InfoCenter Integration - Hakuba New Features"
       },
       "preRequisiteMap": {
       }
@@ -215,7 +227,8 @@
         "Dobson": "Digital - Dobson New Features | Digital Integration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
         "Flaine": "Digital - Flaine New Features",
-        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+        "Garmisch": "EnterpriseEngage - Garmisch New Features",
+        "Hakuba": "EnterpriseEngage - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -242,7 +255,8 @@
         "Dobson": "Digital - Dobson New Features | Digital Configuration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
         "Flaine": "Digital - Flaine New Features",
-        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+        "Garmisch": "EnterpriseEngage - Garmisch New Features",
+        "Hakuba": "EnterpriseEngage - Hakuba New Features"
       },
       "preRequisiteMap": {
       }
