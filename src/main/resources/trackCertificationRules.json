@@ -95,7 +95,7 @@
         "Dobson": "ClaimCenter - Dobson New Features",
         "Elysian": "ClaimCenter - Elysian New Features",
         "Flaine": "ClaimCenter - Flaine New Features",
-        "Garmish": "ClaimCenter - Garmisch New Features",
+        "Garmisch": "ClaimCenter - Garmisch New Features",
         "Hakuba": "ClaimCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
@@ -110,7 +110,8 @@
         "Dobson": "InsuranceSuite Analyst - Dobson New Features",
         "Elysian": "InsuranceSuite Analyst - Elysian New Features",
         "Flaine": "InsuranceSuite Analyst - Flaine New Features",
-        "Garmisch": "InsuranceSuite Analyst - Garmisch New Features"
+        "Garmisch": "InsuranceSuite Analyst - Garmisch New Features",
+        "Hakuba": "InsuranceSuite Analyst - Hakuba New Features"
       },
       "otherMap": {
       },
@@ -210,8 +211,7 @@
         "Cortina": "Digital - Cortina New Features",
         "Dobson": "Digital - Dobson New Features | Digital Integration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
-        "Flaine": "Digital - Flaine New Features",
-        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+        "Flaine": "Digital - Flaine New Features"
       },
       "preRequisiteMap": {
       },
@@ -241,8 +241,7 @@
         "Cortina": "Digital - Cortina New Features | Digital Configuration - Cortina New Features",
         "Dobson": "Digital - Dobson New Features | Digital Configuration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
-        "Flaine": "Digital - Flaine New Features",
-        "Garmisch": "EnterpriseEngage - Garmisch New Features"
+        "Flaine": "Digital - Flaine New Features"
       },
       "preRequisiteMap": {
       }

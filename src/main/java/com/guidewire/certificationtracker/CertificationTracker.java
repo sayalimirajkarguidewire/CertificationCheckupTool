@@ -88,19 +88,23 @@ public class CertificationTracker {
   }
 
   public void analyzeDataForAllUsers(String outputFilePath) throws Exception {
-    List<String> outputLines = this.emailToNameMap.entrySet()
+    List<String> outputLines = new ArrayList<>();
+    outputLines.add("User Email,Organization Name,Manager Email,Recommendation");
+    List<String> contentLines = this.emailToNameMap.entrySet()
             .stream()
             .map(entry -> {
               try {
                 String recommendations = this.getRecommendations(entry.getKey());
                 return entry.getKey() + ",\"" + emailToOrganizationMap.get(entry.getKey()) + "\",\""
-                        + emailToManagerMap.get(entry.getKey()) + "\"," + recommendations;
+                        + emailToManagerMap.get(entry.getKey()) + "\"," + "\"" + recommendations + "\"";
               } catch (Exception e) {
                 System.out.println("Exception occurred : " + e.getStackTrace());
               }
               return "";
             })
+            .map(line -> line.replaceAll("<br>", "\n").replaceAll("<[^>]*>", ""))
             .collect(Collectors.toList());
+    outputLines.addAll(contentLines);
     Files.write(Paths.get(outputFilePath), outputLines);
   }
 
@@ -187,7 +191,7 @@ public class CertificationTracker {
     });
     if (hasValidLevel.get()) {
       outputBuilder.append("<br><br>To access courses for updating certifications log into Guidewire Education "
-        + "account and go to My Learning → My Learning Paths → New Features Subscription<br><br>");
+        + "account and go to My Learning -> My Learning Paths -> New Features Subscription<br><br>");
     }
     outputBuilder.append("</body></html>");
     return outputBuilder.toString();
