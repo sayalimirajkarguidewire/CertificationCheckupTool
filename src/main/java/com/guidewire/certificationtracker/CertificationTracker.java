@@ -21,7 +21,7 @@ public class CertificationTracker {
   private Map<String, String> emailToNameMap;
   private Map<String, String> emailToManagerMap;
   private Map<String, String> emailToOrganizationMap;
-  private static List<String> RELEASE_ORDER = Arrays.asList("Aspen", "Banff", "Cortina", "Dobson", "Elysian", "Flaine",
+  private static List<String> RELEASE_ORDER = Arrays.asList("10.0", "10.x", "Aspen", "Banff", "Cortina", "Dobson", "Elysian", "Flaine",
     "Garmisch", "Hakuba");
 
   public CertificationTracker(String inputPath) throws Exception {
@@ -40,6 +40,21 @@ public class CertificationTracker {
         try {
           String email = row[1];
           String courseName = row[5];
+          if (courseName.contains("10.0")) {
+            courseName = courseName.replaceAll("\\s*10.0\\s*", " ");
+            courseName = courseName + " - 10.0";
+            courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
+            courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
+            courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
+            courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
+          } else if (courseName.contains("10.x")) {
+            courseName = courseName.replaceAll("\\s*10.x\\s*", " ");
+            courseName = courseName + " - 10.x";
+            courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
+            courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
+            courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
+            courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
+          }
           String[] courseNameParts = courseName.split("-�|-");
           String level = getAlphaNumericString(courseNameParts[0].trim());
           String track = getAlphaNumericString(courseNameParts[1].trim());
@@ -158,26 +173,26 @@ public class CertificationTracker {
                 : Collections.emptyMap();
         boolean isValidLevel = false;
         if (intermediate.containsKey("Guidewire Certified Associate")) {
-          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", track,
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", "Guidewire Certified Associate", track,
                   trackCertificationRules.rules.get(track).associateMap,
                   linkedAssociateTrackLevelMap,
                   trackCertificationRules.rules.get(track).preRequisiteMap);
           isValidLevel = true;
         }
         if (intermediate.containsKey("Guidewire Certified Ace")) {
-          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", track,
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", "Ace Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
                   linkedAssociateTrackLevelMap,
                   trackCertificationRules.rules.get(track).preRequisiteMap);
           isValidLevel = true;
         } else if (intermediate.containsKey("Guidewire Certified Specialist")) {
-          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", track,
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", "Specialist Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
                   linkedAssociateTrackLevelMap,
                   trackCertificationRules.rules.get(track).preRequisiteMap);
           isValidLevel = true;
         } else if (intermediate.containsKey("Guidewire Certified Professional")) {
-          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", track,
+          recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", "Professional Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
                   linkedAssociateTrackLevelMap,
                   trackCertificationRules.rules.get(track).preRequisiteMap);
@@ -204,30 +219,46 @@ public class CertificationTracker {
             .forEach(entry -> {
               if (entry.getKey().equals("Guidewire Certified Associate")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
-                outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                if (mostRecentRelease.equals("10.0") || mostRecentRelease.equals("10.x")) {
+                  outputBuilder.append("Associate Certification" + " - " + track + " - " + mostRecentRelease);
+                } else {
+                  outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                }
                 outputBuilder.append("<br>");
               }
               if (entry.getKey().equals("Guidewire Certified Ace")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
-                outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                if (mostRecentRelease.equals("10.0") || mostRecentRelease.equals("10.x")) {
+                  outputBuilder.append("Ace Certification" + " - " + track + " - " + mostRecentRelease);
+                } else {
+                  outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                }
                 outputBuilder.append("<br>");
               } else if (entry.getKey().equals("Guidewire Certified Specialist")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
-                outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                if (mostRecentRelease.equals("10.0") || mostRecentRelease.equals("10.x")) {
+                  outputBuilder.append("Specialist Certification" + " - " + track + " - " + mostRecentRelease);
+                } else {
+                  outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                }
                 outputBuilder.append("<br>");
               } else if (entry.getKey().equals("Guidewire Certified Professional")) {
                 String mostRecentRelease = getMostRecentRelease(entry.getValue());
-                outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                if (mostRecentRelease.equals("10.0") || mostRecentRelease.equals("10.x")) {
+                  outputBuilder.append("Professional Certification" + " - " + track + " - " + mostRecentRelease);
+                } else {
+                  outputBuilder.append(entry.getKey() + " - " + track + " - " + mostRecentRelease);
+                }
                 outputBuilder.append("<br>");
               }
             });
   }
 
   private void recommendInternal(Map<String, List<String>> intermediate, StringBuilder outputBuilder,
-                                 String level, String track, Map<String, String> trackLevelMap,
+                                 String level, String altLevel, String track, Map<String, String> trackLevelMap,
                                  Map<String, String> linkedAssociateTrackLevelMap,
                                  Map<String, List<String>> preRequisiteMap) {
-    List<String> releases = intermediate.get(level);
+    List<String> releases = intermediate.getOrDefault(level, intermediate.get(altLevel));
     String mostRecentRelease = getMostRecentRelease(releases);
     if (!isValidRelease(mostRecentRelease)) {
       outputBuilder.append("Unknown Release : " + mostRecentRelease + "<br>");
@@ -286,7 +317,10 @@ public class CertificationTracker {
     if (startIndex == RELEASE_ORDER.size() - 1) {
       return Arrays.asList();
     }
-    return RELEASE_ORDER.subList(startIndex + 1, RELEASE_ORDER.size());
+    return RELEASE_ORDER.subList(startIndex + 1, RELEASE_ORDER.size())
+            .stream()
+            .filter(x -> !x.equals("10.0") && !x.equals("10.x"))
+            .collect(Collectors.toList());
   }
 
   public String getNameFromEmail(String email) {

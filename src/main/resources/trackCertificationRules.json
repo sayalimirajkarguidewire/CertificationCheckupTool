@@ -128,7 +128,8 @@
         "Dobson": "InsuranceSuite Integration - Dobson New Features",
         "Elysian": "InsuranceSuite Integration - Elysian New Features",
         "Flaine": "InsuranceSuite Integration - Flaine New Features",
-        "Garmisch": "InsuranceSuite Integration - Garmisch New Features"
+        "Garmisch": "InsuranceSuite Integration - Garmisch New Features",
+        "Hakuba": "InsuranceSuite Integration - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -211,7 +212,9 @@
         "Cortina": "Digital - Cortina New Features",
         "Dobson": "Digital - Dobson New Features | Digital Integration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
-        "Flaine": "Digital - Flaine New Features"
+        "Flaine": "Digital - Flaine New Features",
+        "Garmisch": "EnterpriseEngage - Garmisch New Features",
+        "Hakuba": "EnterpriseEngage - Hakuba New Features"
       },
       "preRequisiteMap": {
       },
@@ -238,10 +241,13 @@
       "associateMap": {
       },
       "otherMap": {
+        "Banff": "Must re-certify on Banff to demonstrate competency with new Jutro functionality",
         "Cortina": "Digital - Cortina New Features | Digital Configuration - Cortina New Features",
         "Dobson": "Digital - Dobson New Features | Digital Configuration - Dobson New Features",
         "Elysian": "Digital - Elysian New Features",
-        "Flaine": "Digital - Flaine New Features"
+        "Flaine": "Digital - Flaine New Features",
+        "Garmisch": "EnterpriseEngage - Garmisch New Features",
+        "Hakuba": "EnterpriseEngage - Hakuba New Features"
       },
       "preRequisiteMap": {
       }
