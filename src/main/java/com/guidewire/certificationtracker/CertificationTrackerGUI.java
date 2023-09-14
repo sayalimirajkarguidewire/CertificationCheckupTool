@@ -35,6 +35,7 @@ public class CertificationTrackerGUI extends JFrame {
     super(title);
     addComponentsToPane(this.getContentPane());
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setResizable(false);
     Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
     int x = (int) ((dimension.getWidth() - this.getWidth()) / 3);
     int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
