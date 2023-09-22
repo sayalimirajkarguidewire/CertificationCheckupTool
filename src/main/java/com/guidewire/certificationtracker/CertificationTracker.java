@@ -39,22 +39,7 @@ public class CertificationTracker {
       .forEach(row -> {
         try {
           String email = row[1];
-          String courseName = row[5];
-          if (courseName.contains("10.0")) {
-            courseName = courseName.replaceAll("\\s*10.0\\s*", " ");
-            courseName = courseName + " - 10.0";
-            courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
-            courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
-            courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
-            courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
-          } else if (courseName.contains("10.x")) {
-            courseName = courseName.replaceAll("\\s*10.x\\s*", " ");
-            courseName = courseName + " - 10.x";
-            courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
-            courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
-            courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
-            courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
-          }
+          String courseName = preprocessCourseName(row[5]);
           String[] courseNameParts = courseName.split("-�|-");
           String level = normalize(getAlphaNumericString(courseNameParts[0].trim()));
           String track = normalize(getAlphaNumericString(courseNameParts[1].trim()));
@@ -86,9 +71,30 @@ public class CertificationTracker {
           aggregatorMap.get(email).get(track).get(level).add(release);
           // System.out.println(RichStream.ofs(email, track, level, release).join(","));
         } catch (Exception e) {
-          System.out.println(e.getStackTrace());
+          System.out.println("Failed to read row: " + Stream.of(row).reduce((a, b) -> a + " " + b).orElse(""));
         }
       });
+  }
+
+  private String preprocessCourseName(String courseName) {
+    if (courseName.contains("10.0")) {
+      courseName = courseName.replaceAll("\\s*10.0\\s*", " ");
+      courseName = courseName + " - 10.0";
+      courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
+      courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
+      courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
+      courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
+    } else if (courseName.contains("10.x")) {
+      courseName = courseName.replaceAll("\\s*10.x\\s*", " ");
+      courseName = courseName + " - 10.x";
+      courseName = courseName.replaceAll("Associate Certification", "Guidewire Certified Associate");
+      courseName = courseName.replaceAll("Ace Certification", "Guidewire Certified Ace");
+      courseName = courseName.replaceAll("Specialist Certification", "Guidewire Certified Specialist");
+      courseName = courseName.replaceAll("Professional Certification", "Guidewire Certified Professional");
+    }
+    courseName = courseName.replaceAll("Digital Configuration", "EnterpriseEngage Configuration");
+    courseName = courseName.replaceAll("Digital Integration", "EnterpriseEngage Integration");
+    return courseName;
   }
 
   private String normalize(String input) {
@@ -217,7 +223,8 @@ public class CertificationTracker {
     });
     if (hasValidLevel.get()) {
       outputBuilder.append("<br><br>To access courses for updating certifications log into Guidewire Education "
-        + "account and go to My Learning -> My Learning Paths -> New Features Subscription<br><br>");
+        + "account and go to My Learning -> My Learning Paths -> New Features Subscription. Complete the courses" +
+              " in the specified order to update your certification.<br><br>");
     }
     outputBuilder.append("</body></html>");
     return outputBuilder.toString();

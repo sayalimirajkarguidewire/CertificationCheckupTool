@@ -134,6 +134,8 @@ public class CertificationTrackerGUI extends JFrame {
               "Please specify valid input CSV file!");
             return;
           }
+          certificationStatusTextArea.setVisible(true);
+          certificationStatusTextArea.setText("Computing certification status...");
           this.certificationTracker = new CertificationTracker(inputPathPicker.getSelectedFilePath());
           String output = certificationTracker.getRecommendations(userNameTextField.getText().trim());
           certificationStatusTextArea.setVisible(true);
