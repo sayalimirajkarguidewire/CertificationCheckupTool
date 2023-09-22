@@ -12,6 +12,18 @@
       },
       "linkedAssociateTrack": "InsuranceSuite Developer"
     },
+    "BillingCenter Support Engineer": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "BillingCenter Developer - Aspen New Features",
+        "Banff": "BillingCenter - Banff New Features",
+        "Hakuba": "BillingCenter - Hakuba New Features"
+      },
+      "preRequisiteMap": {
+      },
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
     "Migration Developer": {
       "associateMap": {},
       "otherMap": {},
@@ -73,7 +85,37 @@
       },
       "linkedAssociateTrack": "InsuranceSuite Developer"
     },
+    "PolicyCenter Support Engineer": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "PolicyCenter - Aspen New Features",
+        "Banff": "PolicyCenter - Banff New Features",
+        "Cortina": "PolicyCenter - Cortina New Features",
+        "Elysian": "PolicyCenter - Elysian New Features",
+        "Flaine": "PolicyCenter - Flaine New Features",
+        "Garmisch": "PolicyCenter - Garmisch New Features",
+        "Hakuba": "PolicyCenter - Hakuba New Features"
+      },
+      "preRequisiteMap": {
+      },
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
     "ClaimCenter Configuration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Banff": "ClaimCenter - Banff New Features",
+        "Elysian": "ClaimCenter Developer - Elysian New Features",
+        "Flaine": "ClaimCenter - Flaine New Features",
+        "Garmisch": "ClaimCenter - Garmisch New Features",
+        "Hakuba": "ClaimCenter - Hakuba New Features"
+      },
+      "preRequisiteMap": {
+      },
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
+    "ClaimCenter Support Engineer": {
       "associateMap": {
       },
       "otherMap": {
@@ -119,6 +161,23 @@
       }
     },
     "InsuranceSuite Integration": {
+      "associateMap": {
+      },
+      "otherMap": {
+        "Aspen": "InsuranceSuite Integration - Aspen New Features",
+        "Banff": "InsuranceSuite Integration - Banff New Features",
+        "Cortina": "InsuranceSuite Integration - Cortina New Features",
+        "Dobson": "InsuranceSuite Integration - Dobson New Features",
+        "Elysian": "InsuranceSuite Integration - Elysian New Features",
+        "Flaine": "InsuranceSuite Integration - Flaine New Features",
+        "Garmisch": "InsuranceSuite Integration - Garmisch New Features",
+        "Hakuba": "InsuranceSuite Integration - Hakuba New Features"
+      },
+      "preRequisiteMap": {
+      },
+      "linkedAssociateTrack": "InsuranceSuite Developer"
+    },
+    "InsuranceSuite Integration Support Engineer": {
       "associateMap": {
       },
       "otherMap": {
