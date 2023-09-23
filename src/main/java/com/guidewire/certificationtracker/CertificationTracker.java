@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,14 +38,24 @@ public class CertificationTracker {
     this.releaseToUniqueUsers = new HashMap<>();
     this.releaseToNonUniqueUsers = new HashMap<>();
     CSVUtil.readCsvAsList(inputPath, true).stream()
+      .filter(row -> {
+        String courseName = preprocessCourseName(row[5]);
+        if (getReleaseNumber(courseName) > 0 && getReleaseNumber(courseName) < 10) {
+          return false;
+        }
+        return true;
+      })
       .forEach(row -> {
         try {
           String email = row[1];
+          if (email.equals("bkrishna@germaniainsurance.com")) {
+            System.out.println("Hdagsd");
+          }
           String courseName = preprocessCourseName(row[5]);
           String[] courseNameParts = courseName.split("-�|-");
-          String level = normalize(getAlphaNumericString(courseNameParts[0].trim()));
-          String track = normalize(getAlphaNumericString(courseNameParts[1].trim()));
-          String release = normalize(getAlphaNumericString(courseNameParts[2].trim()));
+          String level = normalize(getAlphaNumericString(courseNameParts[0].trim())).trim();
+          String track = normalize(getAlphaNumericString(courseNameParts[1].trim())).trim();
+          String release = normalize(getAlphaNumericString(courseNameParts[2].trim())).trim();
           if (releaseToUniqueUsers.containsKey(release)) {
             releaseToUniqueUsers.get(release).add(email);
           } else {
@@ -76,6 +88,14 @@ public class CertificationTracker {
       });
   }
 
+  private int getReleaseNumber(String input) {
+    Matcher m = Pattern.compile("\\d+").matcher(input);
+    while (m.find()) {
+      return Integer.parseInt(m.group(0));
+    }
+    return -1;
+  }
+
   private String preprocessCourseName(String courseName) {
     if (courseName.contains("10.0")) {
       courseName = courseName.replaceAll("\\s*10.0\\s*", " ");
@@ -94,17 +114,20 @@ public class CertificationTracker {
     }
     courseName = courseName.replaceAll("Digital Configuration", "EnterpriseEngage Configuration");
     courseName = courseName.replaceAll("Digital Integration", "EnterpriseEngage Integration");
+    courseName = courseName.replaceAll("DataHub Integration", "DataHub and InfoCenter Integration");
+    courseName = courseName.replaceAll("InfoCenter Integration", "DataHub and InfoCenter Integration");
+    courseName = courseName.replaceAll("DataHub and DataHub", "DataHub");
     return courseName;
   }
 
   private String normalize(String input) {
-    return input.replaceAll("[^a-zA-Z0-9-\\.\\s+]", "");
+    return input.replaceAll("[^a-zA-Z0-9-\\.\\s+]", " ");
   }
 
   private String getAlphaNumericString(String input) {
     int startIndex = 0;
     for (int i = 0; i < input.length(); i++) {
-      if (Character.isAlphabetic(input.charAt(i))) {
+      if (Character.isAlphabetic(input.charAt(i)) || Character.isDigit(input.charAt(i)) || input.charAt(i) == '.') {
         startIndex = i;
         break;
       }
@@ -175,48 +198,48 @@ public class CertificationTracker {
       Map<String, List<String>> intermediate = personEntry.getValue();
       outputCurrentCertifications(track, intermediate, outputBuilder);
       if (!trackCertificationRules.rules.containsKey(track)) {
-        outputBuilder.append("Unknown Track : " + track + "<br>");
+        outputBuilder.append("Unknown Track : " + track + "<br><br>");
       } else {
         String linkedAssociateTrack = trackCertificationRules.rules.get(track).linkedAssociateTrack;
         Map<String, String> linkedAssociateTrackLevelMap = linkedAssociateTrack != null
                 ? trackCertificationRules.rules.get(linkedAssociateTrack).associateMap
                 : Collections.emptyMap();
         boolean isValidLevel = false;
-        boolean isLinkedAssociateTrackUpToDate = false;
+        Pair<Boolean, List<String>> linkedAssociateTrackStatus = null;
         if (personMap.containsKey(linkedAssociateTrack)) {
-          isLinkedAssociateTrackUpToDate = recommendInternal(personMap.get(linkedAssociateTrack), new StringBuilder(), "Guidewire Certified Associate", "Guidewire Certified Associate", linkedAssociateTrack,
+          linkedAssociateTrackStatus = recommendInternal(personMap.get(linkedAssociateTrack), new StringBuilder(), "Guidewire Certified Associate", "Guidewire Certified Associate", linkedAssociateTrack,
                   Collections.emptyMap(),
                   Collections.emptyMap(),
-                  trackCertificationRules.rules.get(linkedAssociateTrack).preRequisiteMap);
+                  trackCertificationRules.rules.get(linkedAssociateTrack).preRequisiteMap, true);
         }
         if (intermediate.containsKey("Guidewire Certified Associate")) {
           recommendInternal(intermediate, outputBuilder, "Guidewire Certified Associate", "Guidewire Certified Associate", track,
                   trackCertificationRules.rules.get(track).associateMap,
                   linkedAssociateTrackLevelMap,
-                  trackCertificationRules.rules.get(track).preRequisiteMap);
+                  trackCertificationRules.rules.get(track).preRequisiteMap, false);
           isValidLevel = true;
         }
         if (intermediate.containsKey("Guidewire Certified Ace")) {
           recommendInternal(intermediate, outputBuilder, "Guidewire Certified Ace", "Ace Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
-                  isLinkedAssociateTrackUpToDate ? Collections.emptyMap() : linkedAssociateTrackLevelMap,
-                  trackCertificationRules.rules.get(track).preRequisiteMap);
+                  getEffectiveLinkedMap(linkedAssociateTrackLevelMap, linkedAssociateTrackStatus),
+                  trackCertificationRules.rules.get(track).preRequisiteMap, false);
           isValidLevel = true;
         } else if (intermediate.containsKey("Guidewire Certified Specialist")) {
           recommendInternal(intermediate, outputBuilder, "Guidewire Certified Specialist", "Specialist Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
-                  isLinkedAssociateTrackUpToDate ? Collections.emptyMap() : linkedAssociateTrackLevelMap,
-                  trackCertificationRules.rules.get(track).preRequisiteMap);
+                  getEffectiveLinkedMap(linkedAssociateTrackLevelMap, linkedAssociateTrackStatus),
+                  trackCertificationRules.rules.get(track).preRequisiteMap, false);
           isValidLevel = true;
         } else if (intermediate.containsKey("Guidewire Certified Professional")) {
           recommendInternal(intermediate, outputBuilder, "Guidewire Certified Professional", "Professional Certification", track,
                   trackCertificationRules.rules.get(track).otherMap,
-                  isLinkedAssociateTrackUpToDate ? Collections.emptyMap() : linkedAssociateTrackLevelMap,
-                  trackCertificationRules.rules.get(track).preRequisiteMap);
+                  getEffectiveLinkedMap(linkedAssociateTrackLevelMap, linkedAssociateTrackStatus),
+                  trackCertificationRules.rules.get(track).preRequisiteMap, false);
           isValidLevel = true;
         }
         if (!isValidLevel) {
-          outputBuilder.append("Unknown Level : " + Arrays.toString(intermediate.keySet().toArray()) + "<br>");
+          outputBuilder.append("Unknown Level : " + Arrays.toString(intermediate.keySet().toArray()) + "<br><br><br>");
         }
         hasValidLevel.set(isValidLevel);
       }
@@ -228,6 +251,22 @@ public class CertificationTracker {
     }
     outputBuilder.append("</body></html>");
     return outputBuilder.toString();
+  }
+
+  private Map<String, String> getEffectiveLinkedMap(Map<String, String> inputMap,
+                                                    Pair<Boolean, List<String>> linkedAssociateTrackStatus) {
+    if (linkedAssociateTrackStatus == null) {
+      return inputMap;
+    }
+    return linkedAssociateTrackStatus.first ? Collections.emptyMap() : getSubMap(inputMap, linkedAssociateTrackStatus.second);
+  }
+
+  private Map<String, String> getSubMap(Map<String, String> input, List<String> pendingReleases) {
+    Map<String, String> subMap = new HashMap<>();
+    pendingReleases.stream()
+            .filter(rel -> input.containsKey(rel))
+            .forEach(rel -> subMap.put(rel, input.get(rel)));
+    return subMap;
   }
 
   private void outputCurrentCertifications(String track,
@@ -272,20 +311,21 @@ public class CertificationTracker {
             });
   }
 
-  private boolean recommendInternal(Map<String, List<String>> intermediate, StringBuilder outputBuilder,
-                                 String level, String altLevel, String track, Map<String, String> trackLevelMap,
-                                 Map<String, String> linkedAssociateTrackLevelMap,
-                                 Map<String, List<String>> preRequisiteMap) {
+  private Pair<Boolean, List<String>> recommendInternal(Map<String, List<String>> intermediate, StringBuilder outputBuilder,
+                            String level, String altLevel, String track, Map<String, String> trackLevelMap,
+                            Map<String, String> linkedAssociateTrackLevelMap,
+                            Map<String, List<String>> preRequisiteMap,
+                            boolean isForLinkedAssociateCheck) {
     List<String> releases = intermediate.getOrDefault(level, intermediate.get(altLevel));
     String mostRecentRelease = getMostRecentRelease(releases);
     if (!isValidRelease(mostRecentRelease)) {
       outputBuilder.append("Unknown Release : " + mostRecentRelease + "<br>");
-      return false;
+      return Pair.pair(false, Arrays.asList());
     }
     boolean isUpToDate = false;
     List<String> pendingReleases = getPendingReleases(mostRecentRelease);
     if (pendingReleases.size() == 0 ||
-            pendingReleases.stream().noneMatch(release -> trackLevelMap.containsKey(release))) {
+            (!isForLinkedAssociateCheck && pendingReleases.stream().noneMatch(release -> trackLevelMap.containsKey(release)))) {
       outputBuilder.append("<b><i style=\"color:green;\">Your certification is already up-to-date!</i></b>");
       isUpToDate = true;
     } else {
@@ -298,7 +338,7 @@ public class CertificationTracker {
               .collect(Collectors.joining("<br>")));
     }
     outputBuilder.append("<br><br>");
-    return isUpToDate;
+    return Pair.pair(isUpToDate, pendingReleases);
   }
 
   private String getUpdateMessage(List<String> pendingReleases, Map<String, String> trackLevelMap,

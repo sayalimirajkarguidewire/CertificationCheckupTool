@@ -73,10 +73,10 @@
       "associateMap": {
       },
       "otherMap": {
-        "Aspen": "PolicyCenter - Aspen New Features",
+        "Aspen": "PolicyCenter Developer - Aspen New Features",
         "Banff": "PolicyCenter - Banff New Features",
         "Cortina": "PolicyCenter - Cortina New Features",
-        "Elysian": "PolicyCenter - Elysian New Features",
+        "Elysian": "PolicyCenter Developer - Elysian New Features",
         "Flaine": "PolicyCenter - Flaine New Features",
         "Garmisch": "PolicyCenter - Garmisch New Features",
         "Hakuba": "PolicyCenter - Hakuba New Features"
@@ -89,10 +89,10 @@
       "associateMap": {
       },
       "otherMap": {
-        "Aspen": "PolicyCenter - Aspen New Features",
+        "Aspen": "PolicyCenter Developer - Aspen New Features",
         "Banff": "PolicyCenter - Banff New Features",
         "Cortina": "PolicyCenter - Cortina New Features",
-        "Elysian": "PolicyCenter - Elysian New Features",
+        "Elysian": "PolicyCenter Developer - Elysian New Features",
         "Flaine": "PolicyCenter - Flaine New Features",
         "Garmisch": "PolicyCenter - Garmisch New Features",
         "Hakuba": "PolicyCenter - Hakuba New Features"
@@ -134,8 +134,7 @@
       },
       "otherMap": {
         "Banff": "ClaimCenter - Banff New Features",
-        "Dobson": "ClaimCenter - Dobson New Features",
-        "Elysian": "ClaimCenter - Elysian New Features",
+        "Elysian": "ClaimCenter Analyst - Elysian New Features",
         "Flaine": "ClaimCenter - Flaine New Features",
         "Garmisch": "ClaimCenter - Garmisch New Features",
         "Hakuba": "ClaimCenter - Hakuba New Features"
@@ -146,7 +145,6 @@
     },
     "InsuranceSuite Analyst": {
       "associateMap": {
-        "Aspen": "InsuranceSuite Analyst - Aspen New Features",
         "Banff": "InsuranceSuite Analyst - Banff New Features",
         "Cortina": "InsuranceSuite Analyst - Cortina New Features",
         "Dobson": "InsuranceSuite Analyst - Dobson New Features",
@@ -201,7 +199,7 @@
         "Aspen": "PolicyCenter Business Analyst - Aspen New Features : Advanced Product Designer (APD)",
         "Banff": "PolicyCenter - Banff New Features",
         "Cortina": "PolicyCenter - Cortina New Features",
-        "Elysian": "PolicyCenter - Elysian New Features",
+        "Elysian": "PolicyCenter Analyst - Elysian New Features",
         "Flaine": "PolicyCenter - Flaine New Features",
         "Garmisch": "PolicyCenter - Garmisch New Features",
         "Hakuba": "PolicyCenter - Haukba New Features"
@@ -217,7 +215,7 @@
       "otherMap": {
         "Aspen": "BillingCenter Business Analyst - Aspen New Features",
         "Banff": "BillingCenter - Banff New Features",
-        "Elysian": "BillingCenter - Elysian New Features",
+        "Elysian": "BillingCenter Analyst - Elysian New Features",
         "Hakuba": "BillingCenter - Hakuba New Features"
       },
       "preRequisiteMap": {
